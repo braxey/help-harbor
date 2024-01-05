@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 use Carbon\Carbon;
 
 class Campaign extends Model
@@ -21,6 +20,16 @@ class Campaign extends Model
         'end_date',
         'is_active',
     ];
+
+    public static function fromId(int $id): self
+    {
+        return self::where('id', $id)->first();
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
 
     public function getId(): int
     {
