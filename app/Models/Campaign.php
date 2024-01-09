@@ -86,7 +86,7 @@ class Campaign extends Model
         $this->current_amount = $currentAmount;
     }
 
-    public function getEndDate()
+    public function getEndDate(): ?string
     {
         return $this->end_date;
     }
@@ -103,7 +103,7 @@ class Campaign extends Model
 
     public function isActive(): bool
     {
-        return (int) $this->is_active === 1;
+        return $this->is_active === 1;
     }
 
     public function activate(): void

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\InputException;
 
 class Donation extends Model
 {
@@ -15,6 +16,11 @@ class Donation extends Model
         'campaign_id',
         'amount',
     ];
+
+    public static function fromId(int $id): self
+    {
+        return self::where('id', $id)->first();
+    }
 
     public function getUuid(): string
     {
@@ -53,6 +59,11 @@ class Donation extends Model
 
     public function setAmount(string $amount): void
     {
-        $this->amount = $amount;
+        if (!is_numeric($amount) || $amount < 0) {
+            throw new InputException('Invalid amount provided');
+        }
+    
+        $this->amount = number_format($amount, 2, '.', '');
+        $this->save();
     }
 }
