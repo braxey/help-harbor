@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -20,7 +21,7 @@ app.use((err: Error, req: Request, res: Response, next: Function) => {
 });
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = process.env.APP_PORT;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
