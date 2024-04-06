@@ -1,15 +1,16 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 // Create an Express application
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+app.use(cors(), bodyParser.json());
 
 // Example route
 app.get('/api/example', (req: Request, res: Response) => {
-    res.send('This is an example route');
+    res.json({'data': 'goodbye world'});
 });
 
 // Error handling middleware

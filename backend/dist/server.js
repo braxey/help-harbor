@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 // Create an Express application
 const app = (0, express_1.default)();
 // Middleware
-app.use(body_parser_1.default.json());
+app.use((0, cors_1.default)(), body_parser_1.default.json());
 // Example route
 app.get('/api/example', (req, res) => {
-    res.send('This is an example route');
+    res.json({ 'data': 'goodbye world' });
 });
 // Error handling middleware
 app.use((err, req, res, next) => {
