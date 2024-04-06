@@ -7,8 +7,6 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-    env_file:
-      - path: ./frontend.env
     depends_on:
       - backend
 
@@ -18,5 +16,3 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
-    env_file:
-      - path: ./backend.env

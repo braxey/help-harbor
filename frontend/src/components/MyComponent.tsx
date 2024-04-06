@@ -6,12 +6,11 @@ interface Data {
 
 const MyComponent: React.FC = () => {
   const [data, setData] = useState<Data | null>(null);
-  const backendUrl = 'http://localhost:5000';
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    console.log(process.env);
     let url = backendUrl + '/api/example';
-    console.log(url);
+
     fetch(url)
       .then(response => response.json() as Promise<Data>)
       .then((jsonData: Data) => {
