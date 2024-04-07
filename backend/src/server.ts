@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import { client, connectToDatabase } from './db';
+import { connectToDatabase } from './db';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import exampleRoutes from './routes/exampleRoutes';
+import userRoutes from './routes/user';
 import errorMiddleware from './middlewares/errorMiddleware';
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors(), bodyParser.json());
 
 // Routes
 app.use('/api', exampleRoutes);
+app.use('/user', userRoutes);
 
 // Error handling middleware
 app.use(errorMiddleware);
