@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import { client, connectToDatabase } from './db';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import exampleRoutes from './routes/exampleRoutes';
@@ -20,4 +21,5 @@ app.use(errorMiddleware);
 const port = process.env.APP_PORT;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+    connectToDatabase();
 });
