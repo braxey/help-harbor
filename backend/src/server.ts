@@ -1,27 +1,25 @@
-require('dotenv').config();
-import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import exampleRoutes from './routes/exampleRoutes';
+import errorMiddleware from './middlewares/errorMiddleware';
 
-// Create an Express application
+dotenv.config();
 const app = express();
 
 // Middleware
 app.use(cors(), bodyParser.json());
 
-// Example route
-app.get('/api/example', (req: Request, res: Response) => {
-    res.json({'data': 'goodbye world'});
-});
+// Routes
+app.use('/api', exampleRoutes);
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: Function) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
-});
+app.use(errorMiddleware);
 
-// Start the server
 const port = process.env.APP_PORT;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+export default app;
