@@ -1,15 +1,15 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 
 interface UserInterface extends Document {
     username: string;
     email: string;
-    age: number;
+    password: String,
 }
 
 const userSchema = new mongoose.Schema<UserInterface>({
     username: String,
     email: String,
-    age: Number,
+    password: String,
 })
 
 const User = mongoose.model<UserInterface>('user', userSchema);

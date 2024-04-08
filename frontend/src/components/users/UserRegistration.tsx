@@ -2,37 +2,26 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const CreateUserForm: React.FC = () => {
-    const [username, setUsername] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [age, setAge] = useState<number | undefined>(undefined);
+    const [data, setData] = useState<string>('');
 
-    let createUserUrl: string = process.env.REACT_APP_BACKEND_URL + '/user/create';
+    let dataUrl: string = process.env.REACT_APP_BACKEND_URL + '/api/example';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const response = await axios.post(createUserUrl, {
-                'username': username,
-                'email': email,
-                'age': age
-            });
-            console.log('User created:', response);
-
-            setUsername('');
-            setEmail('');
-            setAge(undefined);
-        } catch (error) {
-            console.error('Error creating user:', error);
-        }
+        let response = await axios.get(dataUrl);
+        let message: string = response.data.data;
+        setData(message);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="number" placeholder="Age" value={age || ''} onChange={(e) => setAge(parseInt(e.target.value))} />
-            <button type="submit">Create User</button>
-        </form>
+        <div>
+            <div>
+                <p>Data: { data }</p>
+            </div>
+            <form onSubmit={handleSubmit}>
+                <button type="submit">Get Data</button>
+            </form>
+        </div>
     );
 };
 
