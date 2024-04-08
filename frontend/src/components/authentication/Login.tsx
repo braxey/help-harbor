@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login: React.FC = () => {
@@ -6,6 +7,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('');
 
     let loginUrl: string = process.env.REACT_APP_BACKEND_URL + '/authentication/login';
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,10 +23,15 @@ const Login: React.FC = () => {
                 }
             });
 
-            setEmail('');
-            setPassword('');
+            if (!response.data.token) {
+                throw new Error('Error logging in');
+            }
+
+            localStorage.setItem('token', response.data.token);
+
+            navigate('/dashboard');
         } catch (error) {
-            console.error('Error creating user:', error);
+            console.error('Error logging in:', error);
         }
     };
 

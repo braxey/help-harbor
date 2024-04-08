@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator'
-import { hashPassword, comparePasswords } from '../services/authService';
+import { hashPassword, comparePasswords, generateJwtToken } from '../services/authService';
 import Credentials from '../types/Credentials';
 import User from '../models/user';
 
@@ -64,9 +64,9 @@ const authenticationController = {
             }
 
             req.session.isLoggedIn = true;
-            req.session.user = user;
+            req.session.email = user.email;
 
-            return res.status(200).json({ message: 'success' });
+            return res.status(200).json({ token: generateJwtToken(user.email) });
         } catch (error: any) {
             console.error('Error during login:', error)
             res.status(500).json({ errors: 'Internal server error'});

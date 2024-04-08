@@ -18,6 +18,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.0",
     "uuid": "^9.0.1"
@@ -26,6 +27,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.12.5",
     "@types/uuid": "^9.0.8",
     "tsx": "^4.7.2",

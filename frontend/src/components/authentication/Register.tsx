@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Register: React.FC = () => {
@@ -7,6 +8,7 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState<string>('');
 
     let registerUrl: string = process.env.REACT_APP_BACKEND_URL + '/authentication/register';
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,12 +25,8 @@ const Register: React.FC = () => {
                 }
             });
 
-            setUsername('');
-            setEmail('');
-            setPassword('');
-
             if (response.status === 200) {
-                console.log('win');
+                navigate('/login');
             }
         } catch (error) {
             console.error('Error creating user:', error);

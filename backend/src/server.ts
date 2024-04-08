@@ -22,7 +22,7 @@ const app = express();
 
 declare module "express-session" {
     interface SessionData {
-        user: any;
+        email: string;
         isLoggedIn: boolean;
     }
 }
@@ -30,7 +30,7 @@ declare module "express-session" {
 app.use(cors(), bodyParser.json());
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'abc',
+    secret: process.env.SESSION_SECRET || 'secret',
     genid: (request) => uuidv4(),
     resave: false,
     saveUninitialized: false,
