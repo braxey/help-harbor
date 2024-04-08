@@ -12,9 +12,9 @@ const authenticationController = {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            req.body.data.password = await hashPassword(req.body.data.password);
-
             let data = req.body.data;
+            data.password = await hashPassword(req.body.data.password);
+
             let validPayload: boolean = (
                 typeof data === 'object' &&
                 Object.keys(data).length === 3 &&
