@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator'
 import { hashPassword, comparePasswords, generateJwtToken } from '../services/authService';
-import Credentials from '../types/Credentials';
 import User from '../models/user';
 
 const authenticationController = {
@@ -12,30 +11,16 @@ const authenticationController = {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            let data = req.body.data;
-            data.password = await hashPassword(req.body.data.password);
+            let data = {
+                username: req.body.data.username,
+                email: req.body.data.email,
+                password: await hashPassword(req.body.data.password),
+            };
 
-            let validPayload: boolean = (
-                typeof data === 'object' &&
-                Object.keys(data).length === 3 &&
-                'username' in data &&
-                'email' in data &&
-                'password' in data &&
-                typeof data.username === 'string' &&
-                typeof data.email === 'string' &&
-                typeof data.password === 'string'
-            );
+            const newUser = new User(data);
+            await newUser.save();
 
-            if (validPayload) {
-                const newUser = new User(data);
-                await newUser.save();
-
-                return res.status(200).json({ message: 'success' });
-            }
-
-            console.log('registration payload not consistent with userinterface');
-            return res.status(400).json({ errors: 'bad request' });
-            
+            return res.status(200).json({ message: 'success' });
         } catch (error: any) {
             console.error('ERROR CREATING USER:', error);
             res.status(500).json({ errors: 'Internal server error' });
@@ -49,7 +34,7 @@ const authenticationController = {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const creds: Credentials = {
+            const creds = {
                 email: req.body.data.email,
                 password: req.body.data.password
             };
