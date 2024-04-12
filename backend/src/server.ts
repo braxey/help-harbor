@@ -9,7 +9,6 @@ import { connectToDatabase } from './db';
 
 // routes
 import exampleRoutes from './routes/exampleRoutes';
-import userRoutes from './routes/user';
 import authenticationRoutes from './routes/authentication';
 
 // error handler
@@ -27,7 +26,6 @@ app.use(cors(corsOptions), bodyParser.json(), createSession());
 
 // routes
 app.use('/api', exampleRoutes);
-app.use('/user', userRoutes);
 app.use('/authentication', authenticationRoutes);
 
 // error handler
