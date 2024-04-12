@@ -1,9 +1,11 @@
 function env(_key: string, _default: any): any {
+    let _config = process.env[_key];
+
     if (typeof _default === 'number') {
-        return process.env._key ? parseInt(process.env._key) : _default;
+        return _config ? parseInt(_config) : _default;
     }
 
-    return process.env._key ? process.env._key : _default;
+    return _config ? _config : _default;
 }
 
 export { env };

@@ -1,9 +1,16 @@
 import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { env } from './helpers';
 
-const uri = env('MONGO_URI', 'mongodb://mongodb:27017/help_harbor');
+let uri = env('MONGO_URI', 'mongodb://mongodb:27017/help_harbor');
 
-async function connectToDatabase() {
+export async function connectToDatabase() {
+    let mongod = null;
+    if (process.env.NODE_ENV === 'test') {
+        mongod = await MongoMemoryServer.create();
+        uri = mongod.getUri();
+    }
+
     try {
         await mongoose.connect(uri);
         console.log('Connected to MongoDB');
@@ -12,4 +19,6 @@ async function connectToDatabase() {
     }
 }
 
-export { connectToDatabase };
+export async function disconnectFromDatabase() {
+    await mongoose.disconnect();
+}

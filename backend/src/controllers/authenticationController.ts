@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator'
 import { hashPassword, comparePasswords, generateJwtToken } from '../services/authService';
-import User from '../models/user';
+import { User } from '../models/user';
 
 const authenticationController = {
     register: async (req: Request, res: Response) => {
