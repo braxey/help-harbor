@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { env } from './helpers';
 
-const uri = process.env.MONGO_URI || 'mongodb://localhost:27017';
+const uri = env('MONGO_URI', 'mongodb://mongodb:27017/help_harbor');
 
 async function connectToDatabase() {
     try {

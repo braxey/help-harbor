@@ -2,11 +2,12 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import RedisStore from 'connect-redis';
 import session from 'express-session';
+import { createClient } from 'redis';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
-// database connection
+import { env } from './helpers';
 import { connectToDatabase } from './db';
 
 // routes
@@ -27,16 +28,46 @@ declare module "express-session" {
     }
 }
 
-app.use(cors(), bodyParser.json());
+const corsOptions = {
+    origin: env('FRONTEND_URL', 'http://localhost:3000'),
+    credentials: true, // allow cookies to be sent with requests
+};
+  
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
+// session setup
+let redisClient = createClient({
+    socket: {
+        host: env('REDIS_HOST', 'redis'),
+        port: env('REDIS_PORT', 6379)
+    }
+});
+redisClient.connect();
+
+redisClient.on('connect', () => {
+    console.log('Connected to Redis');
+});
+  
+redisClient.on('error', (error) => {
+    console.error('Error connecting to Redis:', error);
+});
+
+let redisStore = new RedisStore({
+    client: redisClient,
+    prefix: "help-harbor:",
+});
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    store: redisStore,
+    secret: env('SESSION_SECRET', 'secret'),
     genid: (request) => uuidv4(),
+    rolling: true,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: process.env.SESSION_MAX_AGE ? parseInt(process.env.SESSION_MAX_AGE) : undefined,
-        secure: process.env.APP_ENV === 'production'
+        maxAge: env('SESSION_MAX_AGE', 60000),
+        secure: env('APP_ENV', 'local') === 'production'
     }
 }));
 
@@ -48,7 +79,7 @@ app.use('/authentication', authenticationRoutes);
 // error handler
 app.use(errorMiddleware);
 
-const port = process.env.APP_PORT;
+const port = env('APP_PORT', 5000);
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     connectToDatabase();

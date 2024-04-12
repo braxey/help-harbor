@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../axiosConfig';
 
 const CreateUserForm: React.FC = () => {
     const [data, setData] = useState<string>('');
@@ -8,7 +8,11 @@ const CreateUserForm: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let response = await axios.get(dataUrl);
+        let response = await axios.get(dataUrl, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
         let message: string = response.data.data;
         setData(message);
     };

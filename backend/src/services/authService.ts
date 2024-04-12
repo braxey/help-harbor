@@ -1,5 +1,6 @@
 import * as argon2 from 'argon2';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { env } from '../helpers';
 
 /**
  * passwords
@@ -27,7 +28,7 @@ export async function comparePasswords(password: string, hashedPassword: string)
 export function generateJwtToken(_email: string): string {
     return jwt.sign({
         email: _email
-    }, process.env.JWT_TOKEN_SECRET || 'secret', { expiresIn: process.env.JWT_EXPIRY_TIME + 's' })
+    }, env('JWT_TOKEN_SECRET', 'secret'), { expiresIn: env('JWT_EXPIRY_TIME', 60) + 's' })
 }
 
 export function verifyJwtToken(_email: string, token: string): boolean {
@@ -36,7 +37,7 @@ export function verifyJwtToken(_email: string, token: string): boolean {
             return false;
         }
 
-        let decoded = jwt.verify(token, process.env.JWT_TOKEN_SECRET || 'secret') as JwtPayload;
+        let decoded = jwt.verify(token, env('JWT_TOKEN_SECRET', 'secret')) as JwtPayload;
         return decoded.email && decoded.email === _email;
     } catch (error) {
         return false;
