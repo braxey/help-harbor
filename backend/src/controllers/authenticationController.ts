@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator'
 import { hashPassword, comparePasswords, generateJwtToken } from '../services/authService';
-import { User } from '../models/user';
+import { User, UserInterface } from '../models/user';
 
 const authenticationController = {
     register: async (req: Request, res: Response) => {
@@ -16,6 +16,12 @@ const authenticationController = {
                 email: req.body.data.email,
                 password: await hashPassword(req.body.data.password),
             };
+
+            // see if the email is already in use
+            let user: UserInterface | null = await User.findOne({ email: data.email });
+            if (user) {
+                return res.status(409).json({ errors: 'email already in use' });
+            }
 
             const newUser = new User(data);
             await newUser.save();

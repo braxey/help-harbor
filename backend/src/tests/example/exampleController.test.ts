@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import { app, server } from '../../server';
-import { UserInterface } from '../../models/user';
-import UserSeeder from '../seeders/user';
+import { UserSeeder, UserSeederInterface } from '../seeders/user';
 import { logUserIn, logUserOut } from '../testHelpers';
 import { connectToDatabase, disconnectFromDatabase } from '../../db';
 
@@ -9,12 +8,12 @@ const request = supertest(app);
 
 describe('Example Controller', () => {
 
-    let user: UserInterface;
+    let user: UserSeederInterface;
 
     beforeAll(async () => {
         await connectToDatabase();
 
-        user = await UserSeeder.build();
+        user = await (new UserSeeder()).build();
         logUserIn(user.email, user.password);
     });
 

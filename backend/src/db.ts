@@ -9,6 +9,7 @@ export async function connectToDatabase() {
     if (process.env.NODE_ENV === 'test') {
         mongod = await MongoMemoryServer.create();
         uri = mongod.getUri();
+        return await mongoose.connect(uri);
     }
 
     try {

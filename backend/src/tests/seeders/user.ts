@@ -2,28 +2,53 @@ import { faker } from '@faker-js/faker';
 import { User, UserInterface } from '../../models/user';
 import { hashPassword } from '../../services/authService';
 
+interface UserSeederInterface {
+  username: string;
+  email: string;
+  password: string,
+  unhashedPassword: string;
+}
+
 class UserSeeder {
-  static async build(): Promise<UserInterface> {
-    const username = faker.internet.userName();
-    const email = faker.internet.email();
-    const password = faker.internet.password();
-    const hashedPassword = await hashPassword(password);
+  private username: string;
+  private email: string;
+  private password: string;
+  private hashedPassword: string;
+
+  constructor() {
+    this.username = faker.internet.userName();
+    this.email = faker.internet.email().toLowerCase();
+    this.password = faker.internet.password();
+    this.hashedPassword = '';
+  }
+
+
+  async build(): Promise<UserSeederInterface> {
+    this.hashedPassword = await hashPassword(this.password);
 
     const newUser = new User({
-      username,
-      email,
-      hashedPassword,
+      username: this.username,
+      email: this.email,
+      password: this.hashedPassword,
     });
 
     try {
-      let savedUser = (await newUser.save()).toJSON();
-      savedUser.password = password;
-      return savedUser;
+      await newUser.save();
+      return this.jsonSerialize();
     } catch (error) {
       console.error('Error saving user:', error);
-      return {} as UserInterface;
+      return {} as UserSeederInterface;
+    }
+  }
+
+  jsonSerialize(): UserSeederInterface {
+    return {
+      username: this.username,
+      email: this.email,
+      password: this.hashedPassword,
+      unhashedPassword: this.password,
     }
   }
 }
 
-export default UserSeeder;
+export { UserSeeder, UserSeederInterface };
