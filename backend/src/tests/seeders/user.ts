@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { User, UserInterface } from '../../models/user';
+import { User } from '../../models/user';
 import { hashPassword } from '../../services/authService';
+import validator from 'validator';
 
 interface UserSeederInterface {
   username: string;
@@ -22,13 +23,12 @@ class UserSeeder {
     this.hashedPassword = '';
   }
 
-
   async build(): Promise<UserSeederInterface> {
     this.hashedPassword = await hashPassword(this.password);
 
     const newUser = new User({
       username: this.username,
-      email: this.email,
+      email: validator.normalizeEmail(this.email, { all_lowercase: true }),
       password: this.hashedPassword,
     });
 
