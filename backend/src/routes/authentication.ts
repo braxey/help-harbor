@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator'
-import sessionMiddleware from '../middlewares/sessionMiddleware';
+import authenticationMiddleware from '../middlewares/authenticationMiddleware';
 import authenticationController from '../controllers/authenticationController';
 
 const router = express.Router();
@@ -16,6 +16,6 @@ router.post('/login', [
     body('data.password').trim().isLength({ min: 8 }).withMessage('invalid password'),
 ], authenticationController.login);
 
-router.get('/logout', sessionMiddleware, authenticationController.logout);
+router.get('/logout', authenticationMiddleware, authenticationController.logout);
 
 export default router;

@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { app, server } from '../../server';
 import { UserSeeder, UserSeederInterface } from '../seeders/user';
-import { AuthPack, logUserIn, logUserOut } from '../testHelpers';
+import { AuthPack, logUserIn } from '../testHelpers';
 import { connectToDatabase, disconnectFromDatabase } from '../../db';
 
 const request = supertest(app);
@@ -24,7 +24,7 @@ describe('Example Controller', () => {
     })
 
     test('should return example data', async () => {
-        const response = await request.get('/api/example').set('Authorization', 'Bearer ' + auth.jwtToken).set('Cookie', auth.sessionCookie);
+        const response = (await request.get('/api/example').set('Authorization', 'Bearer ' + auth.jwtToken).set('Cookie', auth.sessionCookie));
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ data: 'This is example data' });

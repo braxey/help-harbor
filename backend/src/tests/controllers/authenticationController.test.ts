@@ -5,7 +5,7 @@ import { User, UserInterface } from '../../models/user';
 import { UserSeeder, UserSeederInterface } from '../seeders/user';
 import { connectToDatabase, disconnectFromDatabase } from '../../db';
 import { faker } from '@faker-js/faker';
-import { AuthPack, createErrorArray, logUserIn } from '../testHelpers';
+import { AuthPack, createErrorArray, logUserIn, logUserOut } from '../testHelpers';
 import validator from 'validator';
 const request = supertest(app);
 
@@ -152,7 +152,7 @@ describe('Authentication Controller', () => {
     test('can log out', async () => {
         let auth: AuthPack = await logUserIn(user.email, user.unhashedPassword);
 
-        const response = await request.get('/authentication/logout').set('Authorization', 'Bearer ' + auth.jwtToken).set('Cookie', auth.sessionCookie);
+        const response = await logUserOut(auth);
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ message: 'success' });

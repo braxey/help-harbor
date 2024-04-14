@@ -21,8 +21,8 @@ export async function logUserIn(_email: string, _password: string): Promise<Auth
     };
 }
 
-export async function logUserOut(req: Request) {
-    return await request.post('/authentication/logout');
+export async function logUserOut(auth: AuthPack) {
+    return await request.get('/authentication/logout').set('Authorization', 'Bearer ' + auth.jwtToken).set('Cookie', auth.sessionCookie);
 }
 
 export function createErrorArray(field: string, value: any, message: string) {
