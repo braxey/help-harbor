@@ -1,12 +1,8 @@
 import supertest from 'supertest';
 import { app, server } from '../../server';
-import { comparePasswords } from '../../services/authService';
-import { User, UserInterface } from '../../models/user';
 import { UserSeeder, UserSeederInterface } from '../seeders/user';
 import { connectToDatabase, disconnectFromDatabase } from '../../db';
-import { faker } from '@faker-js/faker';
-import { AuthPack, createErrorArray, logUserIn, logUserOut } from '../testHelpers';
-import validator from 'validator';
+import { AuthPack, logUserIn } from '../testHelpers';
 const request = supertest(app);
 
 describe('Authentication Middleware', () => {

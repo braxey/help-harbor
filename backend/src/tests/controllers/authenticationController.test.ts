@@ -11,6 +11,8 @@ const request = supertest(app);
 
 interface RegisterPayload {
     data: {
+        first_name: string;
+        last_name: string;
         username: string;
         email: string;
         password: string;
@@ -59,8 +61,12 @@ describe('Authentication Controller', () => {
         const registeredUser: UserInterface | null = await User.findOne({ email: normalizedEmail });
         
         expect(registeredUser).toBeDefined();
+        expect(registeredUser?.uuid).toBeDefined();
+        expect(registeredUser?.first_name).toBe(payload.data.first_name);
+        expect(registeredUser?.last_name).toBe(payload.data.last_name);
         expect(registeredUser?.username).toBe(payload.data.username);
         expect(registeredUser?.email).toBe(normalizedEmail);
+
         expect(await comparePasswords(payload.data.password, registeredUser?.password?? '')).toBeTruthy();
     });
 
@@ -75,9 +81,23 @@ describe('Authentication Controller', () => {
     });
 
     test('registration validation', async () => {
-        // no username
-        let invalidPayload: RegisterPayload = createRegisterPayload({data: {username: ''}});
+        // no first name
+        let invalidPayload: RegisterPayload = createRegisterPayload({data: {first_name: ''}});
         let response = await request.post('/authentication/register').send(invalidPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual(createErrorArray('first_name', invalidPayload.data.first_name, 'first name cannot be empty'));
+
+        // no last name
+        invalidPayload = createRegisterPayload({data: {last_name: ''}});
+        response = await request.post('/authentication/register').send(invalidPayload);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual(createErrorArray('last_name', invalidPayload.data.last_name, 'last name cannot be empty'));
+
+        // no username
+        invalidPayload = createRegisterPayload({data: {username: ''}});
+        response = await request.post('/authentication/register').send(invalidPayload);
 
         expect(response.status).toBe(400);
         expect(response.body).toEqual(createErrorArray('username', invalidPayload.data.username, 'username cannot be empty'));
@@ -160,12 +180,16 @@ describe('Authentication Controller', () => {
 });
 
 function createRegisterPayload(overrides?: any): RegisterPayload {
+    const firstName = overrides?.data.first_name?? faker.person.lastName();
+    const lastName = overrides?.data.last_name?? faker.person.firstName();
     const username = overrides?.data.username?? faker.internet.userName();
     const email = overrides?.data.email?? faker.internet.email().toLowerCase();
     const password = overrides?.data.password?? faker.internet.password();
 
     return {
         data: {
+            first_name: firstName,
+            last_name: lastName,
             username: username,
             email: email,
             password: password,
