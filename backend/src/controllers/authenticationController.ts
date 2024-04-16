@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator'
+import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, comparePasswords, generateJwtToken } from '../services/authService';
 import { User, UserInterface } from '../models/user';
 
@@ -12,6 +13,9 @@ const authenticationController = {
             }
 
             let data = {
+                uuid: uuidv4(),
+                first_name: req.body.data.first_name,
+                last_name: req.body.data.last_name,
                 username: req.body.data.username,
                 email: req.body.data.email,
                 password: await hashPassword(req.body.data.password),
