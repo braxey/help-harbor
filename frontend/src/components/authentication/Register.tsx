@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../axiosConfig';
 
 const Register: React.FC = () => {
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -19,6 +21,8 @@ const Register: React.FC = () => {
                     'content-type': 'application/json',
                 },
                 data: {
+                    'first_name': firstName,
+                    'last_name': lastName,
                     'username': username,
                     'email': email,
                     'password': password
@@ -35,6 +39,8 @@ const Register: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
             <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
             <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
